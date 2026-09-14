@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-dark: #0f172a;
+        --bg-mid: #111827;
+        --panel: rgba(15, 23, 42, 0.78);
+        --panel-light: rgba(255, 255, 255, 0.08);
+        --text: #e5eefb;
+        --muted: #a7b5cc;
+        --primary: #7c3aed;
+        --primary-2: #22c55e;
+        --primary-3: #3b82f6;
+        --border: rgba(255, 255, 255, 0.12);
+        --shadow: 0 24px 60px rgba(15, 23, 42, 0.4);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Inter", sans-serif;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(circle at top left, rgba(124, 58, 237, 0.45), transparent 35%),
+          radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.32), transparent 28%),
+          linear-gradient(135deg, #0b1120 0%, #111827 45%, #0f172a 100%);
+        color: var(--text);
+      }
+
+      .page-shell {
+        width: min(1100px, calc(100% - 40px));
+        min-height: 720px;
+        border-radius: 28px;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+      }
+
+      .login-panel {
+        display: grid;
+        grid-template-columns: 1.12fr 1fr;
+        min-height: 100%;
+      }
+
+      .brand-panel {
+        position: relative;
+        padding: 48px 42px;
+        background:
+          linear-gradient(160deg, rgba(124, 58, 237, 0.9), rgba(30, 41, 59, 0.78)),
+          linear-gradient(120deg, rgba(34, 197, 94, 0.2), rgba(59, 130, 246, 0.15));
+      }
+
+      .brand-panel::before,
+      .brand-panel::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(12px);
+      }
+
+      .brand-panel::before {
+        width: 280px;
+        height: 280px;
+        background: rgba(59, 130, 246, 0.22);
+        top: -40px;
+        right: -40px;
+      }
+
+      .brand-panel::after {
+        width: 360px;
+        height: 360px;
+        background: rgba(34, 197, 94, 0.16);
+        bottom: -100px;
+        left: -80px;
+      }
+
+      .brand-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .logo-mark {
+        width: 36px;
+        height: 36px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.28), rgba(255,255,255,0.08));
+        border: 1px solid rgba(255,255,255,0.16);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+      }
+
+      .logo-mark::before {
+        content: "L";
+        font-size: 1.1rem;
+        font-weight: 800;
+      }
+
+      .brand-tag {
+        padding: 9px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.18);
+        background: rgba(255,255,255,0.06);
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.86);
+      }
+
+      .hero-copy {
+        padding-top: 60px;
+        max-width: 510px;
+      }
+
+      .eyebrow {
+        margin: 0 0 16px;
+        font-size: 0.8rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.76);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2.4rem, 3vw, 4rem);
+        line-height: 1.05;
+        letter-spacing: -0.08em;
+      }
+
+      .hero-copy p {
+        margin: 20px 0 0;
+        max-width: 420px;
+        font-size: 1.02rem;
+        line-height: 1.7;
+        color: rgba(255,255,255,0.8);
+      }
+
+      .metrics {
+        margin-top: 36px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .metric {
+        min-width: 150px;
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 1.8rem;
+        letter-spacing: -0.05em;
+      }
+
+      .metric span {
+        color: rgba(255,255,255,0.72);
+        font-size: 0.9rem;
+      }
+
+      .mini-card {
+        width: min(100%, 430px);
+        padding: 20px 22px;
+        border-radius: 20px;
+        background: rgba(15, 23, 42, 0.34);
+        border: 1px solid rgba(255,255,255,0.14);
+        backdrop-filter: blur(5px);
+      }
+
+      .mini-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .mini-card-header strong {
+        font-size: 1rem;
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(34, 197, 94, 0.18);
+        color: #dcfce7;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .status::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        display: block;
+        border-radius: 50%;
+        background: #4ade80;
+      }
+
+      .mini-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .mini-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.04);
+        color: rgba(255,255,255,0.82);
+        font-size: 0.92rem;
+      }
+
+      .mini-item .pill {
+        padding: 5px 8px;
+        border-radius: 999px;
+        background: rgba(96, 165, 250, 0.2);
+        color: #dbeafe;
+        font-weight: 600;
+        font-size: 0.72rem;
+      }
+
+      .form-panel {
+        padding: 42px 36px;
+        background: rgba(15, 23, 42, 0.68);
+      }
+
+      .form-wrap {
+        max-width: 420px;
+        margin: 0 auto;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .subheading {
+        margin: 0;
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      h2 {
+        margin: 12px 0 26px;
+        font-size: clamp(2rem, 2.2vw, 2.6rem);
+        letter-spacing: -0.06em;
+      }
+
+      .social-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 22px;
+      }
+
+      .social-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 16px;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.02);
+        color: var(--text);
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      }
+
+      .social-btn:hover {
+        transform: translateY(-1px);
+        border-color: rgba(255,255,255,0.22);
+        background: rgba(255,255,255,0.04);
+      }
+
+      .divider {
+        position: relative;
+        text-align: center;
+        margin: 8px 0 18px;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .divider::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        height: 1px;
+        background: var(--border);
+      }
+
+      .divider span {
+        display: inline-block;
+        position: relative;
+        padding: 0 12px;
+        background: rgba(15, 23, 42, 0.68);
+      }
+
+      .field {
+        margin-bottom: 18px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 0.86rem;
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      .input-wrap {
+        position: relative;
+      }
+
+      .input-wrap span {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1rem;
+        opacity: 0.8;
+      }
+
+      input {
+        width: 100%;
+        border: 1px solid var(--border);
+        background: rgba(15, 23, 42, 0.45);
+        color: var(--text);
+        border-radius: 14px;
+        padding: 15px 18px 15px 44px;
+        font: inherit;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      }
+
+      input::placeholder {
+        color: rgba(167, 181, 204, 0.75);
+      }
+
+      input:focus {
+        outline: none;
+        border-color: rgba(124, 58, 237, 0.9);
+        box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.18);
+        background: rgba(15, 23, 42, 0.7);
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin: 6px 0 24px;
+        font-size: 0.9rem;
+      }
+
+      .checkbox {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+      }
+
+      .checkbox input {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--primary);
+        padding: 0;
+      }
+
+      .forgot {
+        color: #c4b5fd;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .primary-btn {
+        width: 100%;
+        border: none;
+        border-radius: 14px;
+        padding: 15px 18px;
+        background: linear-gradient(135deg, var(--primary), #8b5cf6 55%, #3b82f6);
+        color: white;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 18px 30px rgba(124, 58, 237, 0.35);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .primary-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 22px 36px rgba(124, 58, 237, 0.42);
+      }
+
+      .signup {
+        margin-top: 24px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.96rem;
+      }
+
+      .signup a {
+        color: #d9c8ff;
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      @media (max-width: 900px) {
+        .login-panel {
+          grid-template-columns: 1fr;
+        }
+
+        .brand-panel {
+          padding-bottom: 24px;
+        }
+
+        .form-panel {
+          padding-top: 28px;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .page-shell {
+          width: min(100% - 20px, 1100px);
+          min-height: auto;
+        }
+
+        .brand-panel,
+        .form-panel {
+          padding-left: 22px;
+          padding-right: 22px;
+        }
+
+        .social-row {
+          grid-template-columns: 1fr;
+        }
+
+        .row {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="login-panel">
+        <aside class="brand-panel">
+          <div class="brand-content">
+            <div class="topbar">
+              <div class="logo">
+                <span class="logo-mark" aria-hidden="true"></span>
+                <span>Nova</span>
+              </div>
+              <span class="brand-tag">Welcome back</span>
+            </div>
+
+            <div class="hero-copy">
+              <p class="eyebrow">Smart workspace</p>
+              <h1>Build your next big idea with confidence.</h1>
+              <p>
+                Organize projects, track progress, and move faster with a platform built for
+                modern teams and growing businesses.
+              </p>
+
+              <div class="metrics">
+                <div class="metric">
+                  <strong>2.4M</strong>
+                  <span>Users active</span>
+                </div>
+                <div class="metric">
+                  <strong>99.9%</strong>
+                  <span>Uptime</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mini-card">
+              <div class="mini-card-header">
+                <strong>Team progress</strong>
+                <span class="status">Live</span>
+              </div>
+
+              <div class="mini-list">
+                <div class="mini-item">
+                  <span>Design sprint</span>
+                  <span class="pill">84%</span>
+                </div>
+                <div class="mini-item">
+                  <span>Product launch</span>
+                  <span class="pill">61%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <section class="form-panel">
+          <div class="form-wrap">
+            <p class="subheading">Welcome back</p>
+            <h2>Sign in</h2>
+
+            <div class="social-row">
+              <button class="social-btn" type="button">Google</button>
+              <button class="social-btn" type="button">GitHub</button>
+            </div>
+
+            <div class="divider"><span>or continue with email</span></div>
+
+            <form action="#" method="post">
+              <div class="field">
+                <label for="email">Email address</label>
+                <div class="input-wrap">
+                  <span aria-hidden="true">?</span>
+                  <input id="email" type="email" placeholder="name@example.com" />
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="password">Password</label>
+                <div class="input-wrap">
+                  <span aria-hidden="true">??</span>
+                  <input id="password" type="password" placeholder="Enter your password" />
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="checkbox">
+                  <input type="checkbox" />
+                  <span>Remember me</span>
+                </label>
+
+                <a class="forgot" href="#">Forgot password?</a>
+              </div>
+
+              <button type="submit" class="primary-btn">Sign in</button>
+            </form>
+
+            <p class="signup">
+              Don’t have an account?
+              <a href="#">Create one</a>
+            </p>
+          </div>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>
